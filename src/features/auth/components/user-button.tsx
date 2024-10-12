@@ -34,7 +34,7 @@ const UserButton = () => {
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" side="bottom" className="w-60" sideOffset={10}>
+      <DropdownMenuContent align="end" side="bottom" className="w-60" sideOffset={10}>
         <div className="flex flex-col items-center justify-center gap-2 px-2.5 py-4">
           <Avatar className="size-[52px] text-xl border border-neutral-300">
             <AvatarFallback className="bg-neutral-200 font-medium text-neutral-500 flex items-center justify-center">
