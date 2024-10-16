@@ -109,7 +109,7 @@ export const CreateWorkspaceForm = ({ onCancel } : CreateWorkspaceFormProps) => 
                           </AvatarFallback>
                         </Avatar>
                       )}
-                      <div className='flex flex-col'>
+                      <div className='flex flex-col my-2'>
                         <p className='text-sm'>Workspace Icon</p>
                         <p className='text-sm text-muted-foreground'>JPG, PNG, SVG or JPEG, max 1mb</p>
                         <input 
