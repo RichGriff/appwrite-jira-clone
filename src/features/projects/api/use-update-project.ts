@@ -3,7 +3,6 @@ import { InferRequestType, InferResponseType } from 'hono'
 import { toast } from 'sonner'
 
 import { client } from '@/lib/rpc'
-import { useRouter } from 'next/navigation'
 
 type ResponseType = InferResponseType<typeof client.api.projects[':projectId']['$patch'], 200>
 type RequestType = InferRequestType<typeof client.api.projects[':projectId']['$patch']>

@@ -2,7 +2,7 @@ import { Task } from "../types"
 
 import { format, getDay, parse, startOfWeek, addMonths, subMonths } from 'date-fns'
 import { enUS } from 'date-fns/locale'
-import { act, useState } from "react"
+import { useState } from "react"
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 

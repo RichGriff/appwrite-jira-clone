@@ -8,6 +8,7 @@ export const getCurrent = async () => {
 
     return await account.get()
   } catch (error) {
+    console.log(error)
     return null
   }
 }

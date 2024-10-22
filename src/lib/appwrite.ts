@@ -2,8 +2,7 @@ import 'server-only'
 
 import {
   Client, 
-  Account, 
-  Storage, 
+  Account,
   Users,
   Databases
 } from 'node-appwrite'

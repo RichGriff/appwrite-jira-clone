@@ -43,8 +43,8 @@ export const EditTaskForm = ({ onCancel, projectOptions, memberOptions, initialV
     mutate({ json: values, param: { taskId: initialValues.$id } }, {
       onSuccess: ({ data }) => {
         form.reset()
-        // TODO: Redirect to task
         onCancel?.()
+        router.push(`/workspaces/${workspaceId}/tasks/${data.$id}`)
       }
     })
   }

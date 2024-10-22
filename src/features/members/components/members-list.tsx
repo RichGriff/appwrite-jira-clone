@@ -83,7 +83,7 @@ export const MembersList = () => {
                 <p className="text-xs text-muted-foreground">{member.email}</p>
               </div>
               <div className="ml-auto flex items-center gap-x-4">
-                <Badge className={cn((member as any).role === MemberRole.MEMBER && 'bg-neutral-500')}>{(member as any).role}</Badge>
+                <Badge className={cn(member.role === MemberRole.MEMBER && 'bg-neutral-500')}>{member.role}</Badge>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button

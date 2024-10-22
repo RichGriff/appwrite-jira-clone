@@ -5,7 +5,7 @@ import { createTaskSchema } from '../schemas'
 import { getMember } from '@/features/members/utils'
 import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from '@/config'
 import { ID, Query } from 'node-appwrite'
-import { array, z } from 'zod'
+import { z } from 'zod'
 import { Task, TaskStatus } from '../types'
 import { createAdminClient } from '@/lib/appwrite'
 import { Project } from '@/features/projects/types'
@@ -360,6 +360,10 @@ const app = new Hono()
       }
 
       const workspaceId = workspaceIds.values().next().value
+
+      if(!workspaceId) {
+        return c.json({ error: 'Workspace ID is reequired' }, 400)
+      }
 
       const member = await getMember({
         databases,

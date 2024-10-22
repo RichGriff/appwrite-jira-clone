@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { TaskStatus } from './types'
-import { Description } from '@radix-ui/react-dialog'
 
 export const createTaskSchema = z.object({
   name: z.string().trim().min(1, 'Required'),

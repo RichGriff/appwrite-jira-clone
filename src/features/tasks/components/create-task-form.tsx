@@ -1,6 +1,5 @@
 'use client'
 
-import { useRef } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
 import { useForm } from "react-hook-form"
@@ -11,10 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import DottedSeperator from "@/components/dotted-seperator"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import Image from 'next/image'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { ImageIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useCreateTask } from '../api/use-create-task'
 import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id'
@@ -22,6 +17,7 @@ import { DatePicker } from '@/components/date-picker'
 import { MemberAvatar } from '@/features/members/components/member-avatar'
 import { TaskStatus } from '../types'
 import { ProjectAvatar } from '@/features/projects/components/project-avatar'
+import { useRouter } from "next/navigation"
 
 interface CreateTaskFormProps {
   onCancel?: () => void
@@ -30,8 +26,9 @@ interface CreateTaskFormProps {
 }
 
 export const CreateTaskForm = ({ onCancel, projectOptions, memberOptions } : CreateTaskFormProps) => {
-  const router = useRouter()
   const workspaceId = useWorkspaceId()
+  const router = useRouter()
+
   const { mutate, isPending } = useCreateTask()
 
   const form = useForm<z.infer<typeof createTaskSchema>>({
@@ -45,8 +42,8 @@ export const CreateTaskForm = ({ onCancel, projectOptions, memberOptions } : Cre
     mutate({ json: { ...values, workspaceId} }, {
       onSuccess: ({ data }) => {
         form.reset()
-        // TODO: Redirect to task
         onCancel?.()
+        router.push(`/workspaces/${workspaceId}/tasks/${data.$id}`)
       }
     })
   }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
 import { useForm } from "react-hook-form"
@@ -12,11 +12,10 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Image from 'next/image'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { ArrowLeftIcon, CopyIcon, ImageIcon } from 'lucide-react'
+import { ArrowLeftIcon, ImageIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Project } from '../types'
-import { toast } from 'sonner'
 import { useUpdateProject } from '../api/use-update-project'
 import { useConfirm } from '@/hooks/use-confirm'
 import { useDeleteProject } from '../api/use-delete-project'
@@ -30,8 +29,6 @@ export const EditProjectForm = ({ onCancel, initalValues } : EditProjectFormProp
   const router = useRouter()
   const { mutate, isPending } = useUpdateProject()
   const { mutate: deleteProject, isPending: isDeletingProject } = useDeleteProject()
-
-  console.log(initalValues)
 
   const [ DeleteDialog, confirmDelete ] = useConfirm(
     'Delete Project',

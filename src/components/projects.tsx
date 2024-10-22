@@ -5,15 +5,11 @@ import { useWorkspaceId } from '@/features/workspaces/hooks/use-workspace-id'
 import { useGetProjects } from '@/features/projects/api/use-get-projects'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { memo } from 'react'
 import { cn } from '@/lib/utils'
 import { useCreateProjectModal } from '@/features/projects/hooks/use-create-project-modal'
 import { ProjectAvatar } from '@/features/projects/components/project-avatar'
 
-
 export const Projects = () => {
-  const projectId = null // TODO: useProjectId hook
-
   const pathname = usePathname()
   const { open } = useCreateProjectModal()
   const workspaceId = useWorkspaceId()
