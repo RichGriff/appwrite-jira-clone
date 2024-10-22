@@ -1,5 +1,4 @@
 import { getCurrent } from '@/features/auth/queries'
-import { getWorkspace } from '@/features/workspaces/queries'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
