@@ -20,6 +20,7 @@ import {
 import Link from 'next/link'
 import { loginSchema } from '../schemas'
 import { useLogin } from '../api/use-login'
+import { signUpWithGithub, signUpWithGoogle } from '@/lib/oauth'
 
 export const SignInCard = () => {
   const { mutate, isPending } = useLogin()
@@ -91,11 +92,11 @@ export const SignInCard = () => {
         <DottedSeperator />
       </div>
       <CardContent className="p-7 flex flex-col gap-y-4">
-        <Button disabled={isPending} variant={"secondary"} size={"lg"} className="w-full">
+        <Button onClick={() => signUpWithGoogle()} disabled={isPending} variant={"secondary"} size={"lg"} className="w-full">
           <FcGoogle className='mr-2 size-5' />
           Login with Google
         </Button>
-        <Button disabled={isPending} variant={"secondary"} size={"lg"} className="w-full">
+        <Button onClick={() => signUpWithGithub()} disabled={isPending} variant={"secondary"} size={"lg"} className="w-full">
           <FaGithub className='mr-2 size-5' />
           Login with GitHub
         </Button>
