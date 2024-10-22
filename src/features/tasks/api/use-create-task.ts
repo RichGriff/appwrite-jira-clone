@@ -24,7 +24,7 @@ export const useCreateTask = () => {
 
       return await response.json()
     },
-    onSuccess: ({ data }) => {
+    onSuccess: () => {
       toast.success('Task created!')
 
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
