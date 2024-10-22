@@ -7,8 +7,8 @@ import { usePathname } from 'next/navigation'
 
 const pathnameMap = {
   'tasks': {
-    title: 'My Tasks',
-    description: 'View all of your tasks here.'
+    title: 'All Tasks',
+    description: 'View all tasks here across all projects.'
   },
   'projects': {
     title: 'My Project',

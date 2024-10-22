@@ -4,6 +4,7 @@ import Analytics from "@/components/analytics"
 import DottedSeperator from "@/components/dotted-seperator"
 import { PageError } from "@/components/page-error"
 import { PageLoader } from "@/components/page-loader"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { useGetMembers } from "@/features/members/api/use-get-members"
@@ -18,6 +19,7 @@ import { useCreateTaskModal } from "@/features/tasks/hooks/use-create-task-modal
 import { Task } from "@/features/tasks/types"
 import { useGetWorkspaceAnalytics } from "@/features/workspaces/api/use-get-workspace-analytics"
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id"
+import { snakeCaseToTitleCase } from "@/lib/utils"
 import { formatDistanceToNow } from "date-fns"
 import { CalendarIcon, PlusIcon, SettingsIcon } from "lucide-react"
 import Link from "next/link"
@@ -69,8 +71,8 @@ export const TaskList = ({ data, total }: TaskListProps) => {
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-neutral-50 rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">
-            Tasks ({total})
+          <p className="text-base font-semibold">
+            Upcoming Tasks <span className="text-xs text-muted-foreground">({total})</span>
           </p>
           <Button variant={"ghost"} size={"icon"} onClick={createTask}>
             <PlusIcon className="size-4 text-neutral-400" />
@@ -78,20 +80,26 @@ export const TaskList = ({ data, total }: TaskListProps) => {
         </div>
         <DottedSeperator className="my-4" />
         <ul className="flex flex-col gap-y-4">
-          {data.map(task => (
+          {data.slice(0, 4).map(task => (
             <li key={task.$id}>
               <Link href={`/workspaces/${workspaceId}/tasks/${task.$id}`}>
                 <Card className="shadow-none rounded-lg hover:opacity-75 transition">
-                  <CardContent className="p-4">
-                    <p className="text-lg font-medium truncate">{task.name}</p>
-                    <div className="flex items-center gap-x-2">
-                      <p>{task.project?.name}</p>
-                      <div className="size-1 rounded-full bg-neutral-300" />
-                      <div className="text-sm text-muted-foreground flex items-center">
-                        <CalendarIcon className="size-3 mr-1" />
-                        <span className="truncate">{formatDistanceToNow(new Date(task.dueDate))}</span>
+                  <CardContent className="p-4 flex items-center justify-between">
+                    <div className="">
+                      <p className="text-base font-medium truncate mb-1">{task.name}</p>
+                      <div className="flex items-center gap-x-2">
+                        <div className="flex items-center gap-x-2">
+                          <ProjectAvatar name={task.project?.name} image={task.project?.imageUrl} />
+                          <p className="text-sm">{task.project?.name}</p>
+                        </div>
+                        <div className="size-1 rounded-full bg-neutral-300" />
+                        <div className="text-sm text-muted-foreground flex items-center">
+                          <CalendarIcon className="size-3 mr-1" />
+                          <span className="truncate">{formatDistanceToNow(new Date(task.dueDate))}</span>
+                        </div>
                       </div>
                     </div>
+                    <Badge variant={task.status}>{snakeCaseToTitleCase(task.status)}</Badge>
                   </CardContent>
                 </Card>
               </Link>
@@ -101,9 +109,9 @@ export const TaskList = ({ data, total }: TaskListProps) => {
             No Tasks Found
           </li>
         </ul>
-        <Button variant={"muted"} className="mt-4 w-full">
+        <Button variant={"secondary"} className="mt-4 w-full">
           <Link href={`/workspaces/${workspaceId}/tasks`}>
-            Show All
+            See All Tasks
           </Link>
         </Button>
       </div>
@@ -124,8 +132,8 @@ export const ProjectList = ({ data, total }: ProjectListProps) => {
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-white border rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">
-            Projects ({total})
+          <p className="text-base font-semibold">
+            Projects <span className="text-xs text-muted-foreground">({total})</span>
           </p>
           <Button variant={"ghost"} size={"icon"} onClick={createProject}>
             <PlusIcon className="size-4 text-neutral-400" />
@@ -138,14 +146,14 @@ export const ProjectList = ({ data, total }: ProjectListProps) => {
               <Link href={`/workspaces/${workspaceId}/projects/${project.$id}`}>
                 <Card className="shadow-none rounded-lg hover:opacity-75 transition">
                   <CardContent className="p-4 flex items-center gap-x-2.5">
-                    <ProjectAvatar name={project.name} image={project.imageUrl} className="size-12" fallbackClassName="text-lg" />
+                    <ProjectAvatar name={project.name} image={project.imageUrl} className="size-10" fallbackClassName="text-base" />
                     <p className="text-lg font-medium truncate">{project.name}</p>
                   </CardContent>
                 </Card>
               </Link>
             </li>
           ))}
-          <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
+          <li className="text-sm text-muted-foreground text-start w-full hidden first-of-type:block">
             No Projects Found
           </li>
         </ul>
@@ -166,8 +174,8 @@ export const MemberList = ({ data, total }: MemberListProps) => {
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-white border rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">
-            Members ({total})
+          <p className="text-base font-semibold">
+            Members <span className="text-xs text-muted-foreground">({total})</span>
           </p>
           <Button variant={"ghost"} size={"icon"} asChild>
             <Link href={`/workspaces/${workspaceId}/members`}>
@@ -176,17 +184,17 @@ export const MemberList = ({ data, total }: MemberListProps) => {
           </Button>
         </div>
         <DottedSeperator className="my-4" />
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {data.map(member => (
             <li key={member.$id}>
               <Card className="shadow-none rounded-lg overflow-hidden">
-                <CardContent className="p-3 flex flex-col items-center gap-x-2">
-                  <MemberAvatar name={member.name} className="size-12" />
-                  <div className="flex flex-col items-center overflow-hidden">
-                    <p className="text-lg font-medium line-clamp-1">
+                <CardContent className="p-3 flex items-center gap-x-2">
+                  <MemberAvatar name={member.name} className="size-12 mr-2" />
+                  <div className="flex flex-col items-start overflow-hidden">
+                    <p className="text-base font-medium line-clamp-1">
                       {member.name}
                     </p>
-                    <p className="text-sm text-muted-foreground line-clamp-1">
+                    <p className="text-xs text-muted-foreground line-clamp-1">
                       {member.email}
                     </p>
                   </div>
