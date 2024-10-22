@@ -176,7 +176,7 @@ const app = new Hono()
         ? highestPositionTask.documents[0].position + 1000
         : 1000
 
-      const task = await databases.createDocument(
+      const task = await databases.createDocument<Task>(
         DATABASE_ID,
         TASKS_ID,
         ID.unique(),
@@ -225,7 +225,7 @@ const app = new Hono()
         taskId
       )
 
-      return c.json({ data: { $id: task.$id} })
+      return c.json({ data: { $id: task.$id } })
     }
   )
   .patch(
@@ -278,7 +278,8 @@ const app = new Hono()
 
       return c.json({ data: task })
     }
-  ).get(
+  )
+  .get(
     '/:taskId',
     sessionMiddleware,
     async (c) => {
