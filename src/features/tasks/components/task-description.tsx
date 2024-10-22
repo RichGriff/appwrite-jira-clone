@@ -20,8 +20,11 @@ export const TaskDescription = ({ task } : TaskDescriptionProps) => {
     updateTask({
       json: { description: value },
       param: { taskId: task.$id }
+    }, {
+      onSuccess: () => {
+        setIsEditing(false)
+      }
     })
-    setIsEditing(false)
   }
 
   return (
