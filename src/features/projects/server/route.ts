@@ -8,7 +8,7 @@ import { getMember } from '@/features/members/utils'
 import { createProjectSchema, updateProjectSchema } from '../schemas'
 import { Project } from '../types'
 import { endOfMonth, startOfMonth, subMonths } from 'date-fns'
-import { Task, TaskStatus } from '@/features/tasks/types'
+import { TaskStatus } from '@/features/tasks/types'
 
 const app = new Hono()
   .get(
