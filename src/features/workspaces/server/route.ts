@@ -2,7 +2,7 @@ import { zValidator } from '@hono/zod-validator'
 import { Hono } from 'hono'
 import { createWorkspaceSchema, updateWorkspaceSchema } from '../schemas'
 import { sessionMiddleware } from '@/lib/session-middleware'
-import { DATABASE_ID, IMAGES_BUCKET_ID, MEMBERS_ID, TASKS_ID, WORKSPACES_ID } from '@/config'
+import { DATABASE_ID, IMAGES_BUCKET_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID, WORKSPACES_ID } from '@/config'
 import { ID, Query } from 'node-appwrite'
 import { MemberRole } from '@/features/members/types'
 import { generateInviteCode } from '@/lib/utils'
@@ -222,7 +222,69 @@ const app = new Hono()
         return c.json({ error: 'Unauthorized' }, 401)
       }
 
-      //TODO: Delete members, projects and tasks
+      // TODO: Find and remove related projects
+      const relatedProjects = await databases.listDocuments(
+        DATABASE_ID, 
+        PROJECTS_ID, 
+        [Query.equal('workspaceId', workspaceId)]
+      );
+
+      await Promise.all(
+        relatedProjects.documents.map(async (project) => {
+
+          try {
+            // TODO: Find and remove Tasks related to the above Projects
+            const relatedTasks = await databases.listDocuments(
+              DATABASE_ID, 
+              TASKS_ID, 
+              [Query.equal('projectId', project.$id)]
+            );
+
+            // Delete all tasks related to the project
+            await Promise.all(
+              relatedTasks.documents.map(async (task) => {
+                return databases.deleteDocument(
+                  DATABASE_ID, 
+                  TASKS_ID, 
+                  task.$id
+                );
+              })
+            );
+
+            // After all tasks are deleted, delete the project itself
+            return databases.deleteDocument(
+              DATABASE_ID, 
+              PROJECTS_ID,
+              project.$id
+            );
+          } catch (error) {
+            console.error(`Failed to delete project or tasks for project: ${project.$id}`, error);
+            throw error; // Re-throw to stop execution in case of an error
+          }
+        })
+      );
+
+      // TODO: Find and remove related members
+      const relatedMembers = await databases.listDocuments(
+        DATABASE_ID, 
+        MEMBERS_ID, 
+        [Query.equal('workspaceId', workspaceId)]
+      );
+
+      await Promise.all(
+        relatedMembers.documents.map(async (member) => {
+          try {
+            return databases.deleteDocument(
+              DATABASE_ID, 
+              MEMBERS_ID, 
+              member.$id
+            );
+          } catch (error) {
+            console.error(`Failed to delete member: ${member.$id}`, error);
+            throw error; // Stop execution if a member deletion fails
+          }
+        })
+      );
 
       await databases.deleteDocument(
         DATABASE_ID, 

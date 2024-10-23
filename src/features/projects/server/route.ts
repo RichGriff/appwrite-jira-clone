@@ -8,7 +8,7 @@ import { getMember } from '@/features/members/utils'
 import { createProjectSchema, updateProjectSchema } from '../schemas'
 import { Project } from '../types'
 import { endOfMonth, startOfMonth, subMonths } from 'date-fns'
-import { TaskStatus } from '@/features/tasks/types'
+import { Task, TaskStatus } from '@/features/tasks/types'
 
 const app = new Hono()
   .get(
@@ -211,7 +211,25 @@ const app = new Hono()
         return c.json({ error: 'Unauthorized' }, 401)
       }
 
-      //TODO: Delete tasks
+      // Fetch Tasks that are part of this project
+      const projectTasks = await databases.listDocuments(
+        DATABASE_ID, 
+        TASKS_ID, 
+        [
+          Query.equal('projectId', projectId)
+        ]
+      )
+
+      // Delete all related Tasks
+      await Promise.all(
+        projectTasks.documents.map(async (task) => {
+          return databases.deleteDocument(
+            DATABASE_ID, 
+            TASKS_ID,
+            task.$id
+          )
+        })
+      )
 
       await databases.deleteDocument(
         DATABASE_ID, 
